@@ -18,3 +18,8 @@ module Make(Material : sig type t end) : (Pipe with type t = Material.t) = struc
   let write v chan = Lwt_io.write_value chan v
   let read chan = Lwt_io.read_value chan
 end
+
+module BoolPipe = Make(struct type t = bool end)
+module StringPipe = Make(struct type t = string end)
+module IntPipe = Make(struct type t = int end)
+module CharPipe = Make(struct type t = char end)
