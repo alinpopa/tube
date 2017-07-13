@@ -17,14 +17,12 @@ make
 How to use:
 
 ```
-> module StringMaterial = struct type t = string end;;
-module StringMaterial : sig type t = string end
->  module Pipe = Tube_lib.Make(StringMaterial);;
+>  module Pipe = Tube_lib.Make(struct type t = string end);;
 module Pipe :
 	sig
 		type t = string
-		type reader = Tube__Tube_lib.Make(StringMaterial).reader
-		type writer = Tube__Tube_lib.Make(StringMaterial).writer
+		type reader
+		type writer
 		val create : unit -> reader * writer
 		val write : t -> writer -> unit Lwt.t
 		val read : reader -> t Lwt.t
@@ -47,14 +45,12 @@ or, for custom data types:
 ```
 > type roman_numeral = I | II | III | IV | V | VI | VII | VIII | IX | X;;
 type roman_numeral = I | II | III | IV | V | VI | VII | VIII | IX | X
-> module RomanMaterial = struct type t = roman_numeral end;;
-module RomanMaterial : sig type t = roman_numeral end
-> module Pipe = Tube_lib.Make(RomanMaterial);;
+> module Pipe = Tube_lib.Make(struct type t = roman_numeral end);;
 module Pipe :
 	sig
 		type t = roman_numeral
-		type reader = Tube__Tube_lib.Make(RomanMaterial).reader
-		type writer = Tube__Tube_lib.Make(RomanMaterial).writer
+		type reader
+		type writer
 		val create : unit -> reader * writer
 		val write : t -> writer -> unit Lwt.t
 		val read : reader -> t Lwt.t
