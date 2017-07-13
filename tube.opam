@@ -1,6 +1,6 @@
-opam-version: "1.2.2"
+opam-version: "1.2"
 name: "tube"
-version: "2.1"
+version: "2.2"
 maintainer: "alin.popa@gmail.com"
 authors: ["Alin Popa"]
 homepage: "https://github.com/alinpopa/tube"
@@ -14,3 +14,6 @@ depends: [
   "core"
   "lwt"
 ]
+descr: "
+Almost transparently slim type safe abstraction on top of Lwt_io channels.
+"
