@@ -1,5 +1,6 @@
 opam-version: "1.2.2"
-version: "2.0"
+name: "tube"
+version: "2.1"
 maintainer: "alin.popa@gmail.com"
 authors: ["Alin Popa"]
 homepage: "https://github.com/alinpopa/tube"
