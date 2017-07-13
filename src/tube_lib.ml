@@ -1,7 +1,3 @@
-module type Material = sig
-  type t
-end
-
 module type Pipe = sig
   type t
   type reader
@@ -11,8 +7,8 @@ module type Pipe = sig
   val read : reader -> t Lwt.t
 end
 
-module Make(M : Material) : (Pipe with type t = M.t) = struct
-  type t = M.t
+module Make(Material : sig type t end) : (Pipe with type t = Material.t) = struct
+  type t = Material.t
 
   type reader = Lwt_io.input_channel
   type writer = Lwt_io.output_channel
