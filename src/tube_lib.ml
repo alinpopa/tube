@@ -15,8 +15,19 @@ module Make(Material : sig type t end) : (Pipe with type t = Material.t) = struc
 
   let create () = Lwt_io.pipe ()
 
-  let write v chan = Lwt_io.write_value chan v
-  let read chan = Lwt_io.read_value chan
+  let write v chan =
+    let open Lwt.Infix in
+    let (i, o) = Lwt_io.pipe () in
+    Lwt_io.write_value ~flags:[Marshal.Closures] chan (v, o) >>= fun _ ->
+    Lwt_io.read_value i >>= fun _ ->
+    Lwt.return ()
+
+  let read chan =
+    let open Lwt.Infix in
+    Lwt_io.read_value chan >>= fun (v, o) ->
+    Lwt_io.printl "Got some data..." >>= fun _ ->
+    Lwt_io.write_value o v >>= fun _ ->
+    Lwt.return v
 end
 
 module BoolPipe = Make(struct type t = bool end)
