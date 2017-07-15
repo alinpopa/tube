@@ -17,7 +17,7 @@ make
 How to use:
 
 ```
->  module Pipe = Tube_lib.Make(struct type t = string end);;
+>  module Pipe = Tube.Make(struct type t = string end);;
 module Pipe :
 	sig
 		type t = string
@@ -40,12 +40,24 @@ Error: This expression has type int but an expression was expected of type
 				string
 ```
 
+or, for write with pushback:
+
+```
+> let (reader, writer) = Pipe.create ();;
+val reader : Pipe.reader = <abstr>
+val writer : Pipe.writer = <abstr>
+> Pipe.write_with_pushback "something" writer;;
+(* This will block, when using inside of `utop`, till something reads from the created `reader`; *)
+(* when doing this write in a different context than `utop`, the produced Lwt.t will not move on *)
+(* until something will read from the `reader` *)
+```
+
 or, for custom data types:
 
 ```
 > type roman_numeral = I | II | III | IV | V | VI | VII | VIII | IX | X;;
 type roman_numeral = I | II | III | IV | V | VI | VII | VIII | IX | X
-> module Pipe = Tube_lib.Make(struct type t = roman_numeral end);;
+> module Pipe = Tube.Make(struct type t = roman_numeral end);;
 module Pipe :
 	sig
 		type t = roman_numeral
