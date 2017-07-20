@@ -8,7 +8,7 @@ module type Pipe = sig
   val read : reader -> t Lwt.t
 end
 
-module Make(Material : sig type t end) : (Pipe with type t = Material.t) = struct
+module Make(Material : sig type t end) = struct
   open Lwt.Infix
 
   type t = Material.t
