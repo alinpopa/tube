@@ -4,7 +4,6 @@ module type Pipe = sig
   type writer
   val create : unit -> reader * writer
   val write : t -> writer -> unit Lwt.t
-  val write_with_pushback : t -> writer -> unit Lwt.t
   val read : reader -> t Lwt.t
 end
 
@@ -15,14 +14,24 @@ module Make(Material : sig type t end) = struct
 
   type reader = Lwt_io.input_channel
   type writer = Lwt_io.output_channel
-  type pushback = Empty | WithChannel of Lwt_io.output_channel
 
   let create () = Lwt_io.pipe ()
 
   let write v chan =
-    Lwt_io.write_value ~flags:[Marshal.Closures] chan (v, Empty)
+    Lwt_io.write_value chan v
 
-  let write_with_pushback v chan =
+  let read chan =
+    Lwt_io.read_value chan
+end
+
+module MakeWithPushback(Material : sig type t end) = struct
+  module M = Make(Material)
+  include M
+  open Lwt.Infix
+
+  type pushback = Empty | WithChannel of Lwt_io.output_channel
+
+  let write v chan =
     let (i, o) = Lwt_io.pipe () in
     Lwt_io.write_value ~flags:[Marshal.Closures] chan (v, WithChannel o) >>= fun _ ->
     Lwt_io.read_line i >>= fun _ ->
@@ -36,6 +45,7 @@ module Make(Material : sig type t end) = struct
     | WithChannel o ->
         Lwt_io.write_line o "ok" >>= fun _ -> Lwt.return v
 end
+
 
 module BoolPipe = Make(struct type t = bool end)
 module StringPipe = Make(struct type t = string end)
