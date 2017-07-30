@@ -25,7 +25,7 @@ module Make(Material : sig type t end) = struct
   let write_with_pushback v chan =
     let (i, o) = Lwt_io.pipe () in
     Lwt_io.write_value ~flags:[Marshal.Closures] chan (v, WithChannel o) >>= fun _ ->
-    Lwt_io.read_value i >>= fun _ ->
+    Lwt_io.read_line i >>= fun _ ->
     Lwt.return ()
 
   let read chan =
@@ -34,7 +34,7 @@ module Make(Material : sig type t end) = struct
     | Empty ->
         Lwt.return v
     | WithChannel o ->
-        Lwt_io.write_value o v >>= fun _ -> Lwt.return v
+        Lwt_io.write_line o "ok" >>= fun _ -> Lwt.return v
 end
 
 module BoolPipe = Make(struct type t = bool end)
