@@ -8,7 +8,7 @@ clean:
 	-rm -rf *.install
 
 build:
-	jbuilder build --only-packages=tube @install
+	dune build --only-packages=tube @install
 
 utop:
-	jbuilder exec utop
+	dune exec utop
