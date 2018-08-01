@@ -10,7 +10,7 @@ into all that write/read value to channels.
 ## How to build:
 
 ```
-opam install jbuilder core lwt
+opam install dune lwt
 make
 ```
 
