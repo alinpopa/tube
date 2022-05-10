@@ -15,7 +15,7 @@ build: [
 ]
 depends: [
   "dune" {build & >= "1.0"}
-  "lwt"
+  "lwt" {>= "2.4.7"}
 ]
 descr: "
 Almost transparently slim type safe abstraction on top of Lwt_io channels.
